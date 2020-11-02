@@ -4,13 +4,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <%- include('../../partials/css.ejs') %>
+  <%- include('../../layout/css.ejs') %>
   <title>Search</title>
 </head>
 
 <body>
   <header>
-    <%- include('../../partials/menu.ejs') %>
+    <%- include('../../layout/menu.ejs') %>
   </header>
 
   <main>
@@ -28,7 +28,7 @@
         <label name='property'>Author</label>
         <input class="radio" type="radio" id="author" name='property' value="inauthor">  
       </div>
-      <input class="in" id="submit" type="submit" name='Search the Google Books API'>
+      <input class="in" id="submit" type="submit" value='Search the Google Books API'>
     </form>
   </main>
 
