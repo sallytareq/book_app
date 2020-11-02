@@ -10,6 +10,10 @@ nav h2 {
     font-size: 20px;
     display: block;
 }
+nav a{
+    text-align: center;
+    background-color: rgba(0, 0, 0, 0.726);
+}
 
 nav a.icon {
     background: black;
@@ -27,7 +31,7 @@ nav img {
 }
 
 nav a:hover {
-    background-color: #333;
+    background-color:lightgray;
     color: black;
 }
 
@@ -37,7 +41,8 @@ form div , #submit , #textbox{
     display: block;
     margin: auto;
     margin-top: 30px;
-
+    border-radius: 5px;
+    border: none;
 }
 
 #textbox{
@@ -48,15 +53,22 @@ form div , #submit , #textbox{
 .form-inputs{
     background-color: lightgray;
     line-height: 45px;
+    text-align: left;
 }
 
-#submit{
+.form-inputs label{
+    margin: 0 20px 0 30px;
+}
+
+#submit , .button{
     background-color: black;
     color: white;
 }
 
-#submit:hover{
-    opacity: 50%;
+#submit:hover , .button:hover{
+    background-color: rgb(0, 24, 5);
+    transition: ease-in;
+    transition-delay: 100ms;
 }
 
 .book-results{
@@ -80,7 +92,28 @@ form div , #submit , #textbox{
 
 .book-results p{
     overflow: hidden;
-    height: 20%;
+    height: 10%;
     margin: 10px 0;
 
+}
+
+.button{
+    width: 200px;
+    padding: 14px;
+    margin: 10% 0 0 0;
+    border-radius: 5px;
+    border: none;
+}
+
+#four {
+    margin-top: 25%;
+    background-color: black;
+    font-size: 120px;
+    font-weight: 900;
+}
+
+#error{
+    color: white;
+    background-color: #440000;
+    font-size: 20px;
 }

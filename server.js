@@ -1,16 +1,18 @@
 'use strict';
 
-// load dotenv
+// Load dotenv
 require('dotenv').config();
 
 // dotenv variables
 const PORT = process.env.PORT || 3000;
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY;
+const DATABASE_URL = process.env.DATABASE_URL;
 
 //  Dependencies
 const express = require('express');
 const superagent = require('superagent');
 const cors = require('cors');
+const pg = require('pg');
 
 // App setup
 const app = express();
@@ -18,24 +20,60 @@ app.set('view engine', 'ejs');
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
 
-// specify the public directory to access resources
+// Database Setup
+const client = new pg.Client(DATABASE_URL);
+
+// Resources directory
 app.use(express.static('public'));
 
+// Constructor
+function Book(bookData) {
+  this.image_url = bookData.imageLinks.thumbnail;
+  this.title = bookData.title;
+  this.author = bookData.authors;
+  this.description = bookData.description || 'No description found.';
+  this.isbn = `${bookData.industryIdentifiers[0].type} ${bookData.industryIdentifiers[0].identifier}`;
+}
+
 // Listen
-app.listen(PORT, () => console.log(`Listening on localhost: ${PORT}`));
+client.connect().then(() => {
+  app.listen(PORT, () => console.log(`Listening on localhost: ${PORT}`));
+}).catch(() => console.log(`Could not connect to database`));
+
 
 // Routes
-app.get('/', general);
-// app.get('/hello', general);
 app.get('/searches/new', searchFunction);
 app.post('/searches', resultsFunction);
+app.get('/books/:id', singleBookFunction);
+app.post('/books', addBookFunction);
+app.get('/', bookShelfFunction);
 app.use('*', errorFunction);
 
 // Handlers
-function general(request, response) {
-  response.status(200).render('./pages/index.ejs');
+function bookShelfFunction(request, response) {
+  const selectAll = 'SELECT * FROM books;';
+  client.query(selectAll).then(bookData => {
+    let books = bookData.rows.map((value) => value);
+    const responseObject = { books: books };
+    response.status(200).render('./pages/index.ejs', responseObject);
+  });
 }
-
+function singleBookFunction(request, response) {
+  const select = 'SELECT * FROM books WHERE id=$1;';
+  const bookId = [request.params.id];
+  client.query(select, bookId).then(bookData => {
+    const responseObject = { books: bookData.rows };
+    response.render('pages/books/detail.ejs', responseObject);
+  });
+}
+function addBookFunction(request, response) {
+  // console.log(request.body);
+  const insert = 'INSERT INTO books (author, title, isbn, image_url, description) VALUES($1,$2,$3,$4,$5);';
+  let newBook = request.body.bookData.split('+++');
+  console.log(newBook);
+  client.query(insert, newBook);
+  response.redirect('/');
+}
 function searchFunction(request, response) {
   response.status(200).render('./pages/searches/new.ejs');
 }
@@ -57,10 +95,3 @@ function errorFunction(request, response) {
   response.status(404).render('./pages/error.ejs');
 }
 
-// Constructors
-function Book(bookData) {
-  this.image = bookData.imageLinks.thumbnail;
-  this.title = bookData.title;
-  this.author = bookData.authors;
-  this.description = bookData.description || 'No description found.';
-}
