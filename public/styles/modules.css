@@ -1,0 +1,86 @@
+nav #menu {
+    display: none;
+}
+
+nav a,
+nav h2 {
+    color: white;
+    padding: 14px 16px;
+    text-decoration: none;
+    font-size: 20px;
+    display: block;
+}
+
+nav a.icon {
+    background: black;
+    display: block;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 20px;
+    height: 15px;
+}
+
+nav img {
+    width: 20px;
+    height: 15px;
+}
+
+nav a:hover {
+    background-color: #333;
+    color: black;
+}
+
+form div , #submit , #textbox{
+    width: 300px;
+    height: 45px;
+    display: block;
+    margin: auto;
+    margin-top: 30px;
+
+}
+
+#textbox{
+    color: black;
+    width: 294px;
+}
+
+.form-inputs{
+    background-color: lightgray;
+    line-height: 45px;
+}
+
+#submit{
+    background-color: black;
+    color: white;
+}
+
+#submit:hover{
+    opacity: 50%;
+}
+
+.book-results{
+    box-shadow: 0 0 10px black;
+}
+
+.book-results img {
+    width: 200px;
+}
+
+.book-results h3{
+    font-weight: 700;
+    font-size: x-large;
+    margin: 10px 0;
+}
+
+.book-results h4{
+    font-weight: 600;
+    font-size: large;
+}
+
+.book-results p{
+    overflow: hidden;
+    height: 20%;
+    margin: 10px 0;
+
+}

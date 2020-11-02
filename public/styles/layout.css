@@ -1,0 +1,33 @@
+nav {
+    overflow: hidden;
+    background-color: black;
+    position: relative;
+}
+
+section {
+    margin-top: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+article {
+    padding: 20px;
+    background-color: lightgray;
+    width: 400px;
+    height: 500px;
+    margin: 20px;
+}
+
+h1{
+    color: white;
+    background-color: rgb(85, 82, 82);
+    padding: 14px;
+}
+
+form {
+    width: 100%;
+    text-align: center;
+    margin-top: 50px;
+}
