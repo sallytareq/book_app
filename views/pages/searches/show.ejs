@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <%- include('../../partials/css.ejs') %>
+  <title>Books List</title>
+</head>
+
+<body>
+  <header>
+    <%- include('../../partials/menu.ejs') %>
+  </header>
+
+  <main>
+    <h1>Search Results</h1>
+    <section>
+      <% books.forEach((book) => { %>
+      <article class='book-results'>
+        <img src="<%= book.image %>" alt="<%= book.title %>" onerror="this.src=`https://i.imgur.com/J5LVHEL.jpg`;">
+        <h3><%= book.title %></h3>
+        <h4><%= book.author %></h4>
+        <p><%= book.description %></p>
+      </article>
+      <% }); %>
+    </section>
+  </main>
+
+</body>
+
+</html>
