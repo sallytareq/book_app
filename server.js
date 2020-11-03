@@ -13,12 +13,15 @@ const express = require('express');
 const superagent = require('superagent');
 const cors = require('cors');
 const pg = require('pg');
+const methodOverride = require('method-override');
 
 // App setup
 const app = express();
 app.set('view engine', 'ejs');
 app.use(cors());
 app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
+
 
 // Database Setup
 const client = new pg.Client(DATABASE_URL);
@@ -46,10 +49,10 @@ client.connect().then(() => {
 app.get('/searches/new', searchFunction);
 app.post('/searches', resultsFunction);
 app.post('/books', addBookFunction);
+app.put('/books/:id', updateBookForm);
 app.get('/books/:id', singleBookFunction);
 app.post('/books/:id', readBookData);
-app.put('/books/:id', updateBookForm);
-// app.delete('/books/:id', deleteBook);
+app.delete('/books/delete/:id', deleteBook);
 app.get('/', bookShelfFunction);
 app.use('*', errorFunction);
 
@@ -67,27 +70,27 @@ function readBookData(request, response) {
 
 // app.put('/books/update/:id', updateBookForm);
 function updateBookForm(request, response) {
-  const bookId = [request.body.id];
-  console.log(request.body);
-  response.json(request.body);
-  // console.log('id ' + bookId + '\ndata from request ' + request.body);
-  // const update = 'UPDATE  books SET author=$1 AND title=$2 AND isbn=$3 AND image_url=$4 AND description=$5 WHERE id=$6;';
-  // const updatedData = [];
+  console.log(request.body.author, request.body.title, request.body.isbn , request.body.image_url , request.body.description);
+  const bookId = [request.params.id];
+  const update = 'UPDATE books SET author=$1 AND title=$2 AND isbn=$3 AND image_url=$4 AND description=$5 WHERE id=$6;';
+  const updatedData = [request.body.author, request.body.title, request.body.isbn , request.body.image_url , request.body.description , bookId];
 
-  // client.query(update, updatedData).then(() => {
-  //   response.redirect(`/books/${bookId}`);
-  // });
+  client.query(update, updatedData).then(() => {
+    response.redirect(`/books/${bookId}`);
+  });
 }
 
 // app.delete('/books/delete/:id', deleteBook);
-// function deleteBook(request, response) {
-//   const bookId = [request.body.id];
-//   const deleteSql = 'DELETE FROM tasks WHERE id=$1';
-
-//   client.query(deleteSql, bookId).then(() => {
-//     response.redirect(`/`);
-//   });
-// }
+function deleteBook(request, response) {
+  const bookId = request.params.id;
+  const deleteSql = 'DELETE FROM books WHERE id=$1;';
+  const id = [bookId];
+  console.log('deleting ' + bookId);
+  client.query(deleteSql, id).then(() => {
+    console.log('deleted');
+    response.redirect(`/`);
+  }).catch(console.error);
+}
 
 function bookShelfFunction(request, response) {
   const selectAll = 'SELECT * FROM books;';
@@ -126,24 +129,21 @@ function addBookFunction(request, response) {
     }).catch(console.error);
   });
 }
-
 function searchFunction(request, response) {
   response.status(200).render('./pages/searches/new.ejs');
 }
-
 function resultsFunction(request, response) {
   const url = `https://www.googleapis.com/books/v1/volumes?q=${request.body.property}:${request.body.search}&key=${GOOGLE_API_KEY}`;
 
   superagent.get(url).then(bookData => {
     // console.log(bookData.body);
     let books = bookData.body.items.map((value, index) => {
-      if (index < 10) { return (new Book(value.volumeInfo)); }
+      if (index < 10) {return (new Book(value.volumeInfo));}
     });
     const responseObject = { books: books };
     response.status(200).render('./pages/searches/show.ejs', responseObject);
   }).catch(console.error);
 }
-
 function errorFunction(request, response) {
   response.status(404).render('./pages/error.ejs');
 }
