@@ -30,9 +30,9 @@ app.use(express.static('public'));
 function Book(bookData) {
   this.image_url = bookData.imageLinks.thumbnail;
   this.title = bookData.title;
-  this.author = bookData.authors;
+  this.author = bookData.authors || 'Author not mentioned';
   this.description = bookData.description || 'No description found.';
-  this.isbn = `${bookData.industryIdentifiers[0].type} ${bookData.industryIdentifiers[0].identifier}`;
+  this.isbn = `${bookData.industryIdentifiers[0].type} ${bookData.industryIdentifiers[0].identifier}` || 'ISBN not available';
 }
 
 // Listen
@@ -68,12 +68,26 @@ function singleBookFunction(request, response) {
 }
 function addBookFunction(request, response) {
   // console.log(request.body);
-  const insert = 'INSERT INTO books (author, title, isbn, image_url, description) VALUES($1,$2,$3,$4,$5);';
   let newBook = request.body.bookData.split('+++');
-  console.log(newBook);
-  client.query(insert, newBook);
-  response.redirect('/');
+  const search = 'SELECT * FROM books WHERE author=$1 AND title=$2 AND isbn=$3 AND image_url=$4 AND description=$5;';
+  const select = 'SELECT * FROM books;';
+  const insert = 'INSERT INTO books (author, title, isbn, image_url, description) VALUES($1,$2,$3,$4,$5);';
+
+  client.query(search, newBook).then(bookData => {
+    let bookId = bookData.rows[0].id.toString();
+    console.log('already in database');
+    response.redirect(`/books/${bookId}`);
+  }).catch(() => {
+    console.log('Not existing in database');
+    client.query(insert, newBook);
+    client.query(select).then(bookData => {
+      let i = Number(bookData.rows.length - 1);
+      let bookId = bookData.rows[i].id.toString();
+      response.redirect(`/books/${bookId}`);
+    }).catch(console.error);
+  });
 }
+
 function searchFunction(request, response) {
   response.status(200).render('./pages/searches/new.ejs');
 }
