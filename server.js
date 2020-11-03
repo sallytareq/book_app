@@ -49,7 +49,7 @@ client.connect().then(() => {
 app.get('/searches/new', searchFunction);
 app.post('/searches', resultsFunction);
 app.post('/books', addBookFunction);
-app.put('/books/:id', updateBookForm);
+app.put('/books/update/:id', updateBookForm);
 app.get('/books/:id', singleBookFunction);
 app.post('/books/:id', readBookData);
 app.delete('/books/delete/:id', deleteBook);
@@ -70,9 +70,8 @@ function readBookData(request, response) {
 
 // app.put('/books/update/:id', updateBookForm);
 function updateBookForm(request, response) {
-  console.log(request.body.author, request.body.title, request.body.isbn , request.body.image_url , request.body.description);
-  const bookId = [request.params.id];
-  const update = 'UPDATE books SET author=$1 AND title=$2 AND isbn=$3 AND image_url=$4 AND description=$5 WHERE id=$6;';
+  const bookId = request.params.id.toString();
+  const update = 'UPDATE books SET (author, title, isbn, image_url, description)=($1,$2,$3,$4,$5) WHERE id=$6;';
   const updatedData = [request.body.author, request.body.title, request.body.isbn , request.body.image_url , request.body.description , bookId];
 
   client.query(update, updatedData).then(() => {

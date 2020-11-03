@@ -18,7 +18,7 @@
         <h1>Update Book Details</h1>
         <% books.forEach((book) => { %>
         <article class='update-form'>
-            <form action="/books/<%= book.id %>?_method=PUT" method="POST">
+            <form action="/books/update/<%= book.id %>?_method=PUT" method="POST">
                 <!-- <input type="hidden" name="_method" value="PUT"> -->
                 <input name="title" type="text" placeholder="title" value="<%= book.title %>">
                 <input name="author" type="text" placeholder="author" value="<%= book.author %>">
