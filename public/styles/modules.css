@@ -35,7 +35,7 @@ nav a:hover {
     color: black;
 }
 
-form div , #submit , #textbox{
+form div , #submit , #textbox , .update-form input , textarea , .buttons{
     width: 300px;
     height: 45px;
     display: block;
@@ -50,6 +50,14 @@ form div , #submit , #textbox{
     width: 294px;
 }
 
+.update-form{
+    display: block;
+    margin: auto;
+    margin-top: 50px;
+    width: 400px;
+    height: 50%;
+}
+
 .form-inputs{
     background-color: lightgray;
     line-height: 45px;
@@ -60,15 +68,20 @@ form div , #submit , #textbox{
     margin: 0 20px 0 30px;
 }
 
-#submit , .button{
+#submit , .button , #update , .buttons{
     background-color: black;
     color: white;
+    margin-bottom: 20px;
 }
 
-#submit:hover , .button:hover{
+#submit:hover , .button:hover , #update:hover , .buttons:hover{
     background-color: rgb(0, 24, 5);
     transition: ease-in;
     transition-delay: 100ms;
+}
+
+.buttons{
+    width: 160px;
 }
 
 .book-results{
@@ -92,7 +105,7 @@ form div , #submit , #textbox{
 
 .book-results p{
     overflow: hidden;
-    height: 10%;
+    /* height: 20%; */
     margin: 10px 0;
 
 }
