@@ -33,6 +33,7 @@ function Book(bookData) {
   this.author = bookData.authors || 'Author not mentioned';
   this.description = bookData.description || 'No description found.';
   this.isbn = `${bookData.industryIdentifiers[0].type} ${bookData.industryIdentifiers[0].identifier}` || 'ISBN not available';
+  this.bookshelf = 'Book to read';
 }
 
 // Listen
@@ -44,12 +45,50 @@ client.connect().then(() => {
 // Routes
 app.get('/searches/new', searchFunction);
 app.post('/searches', resultsFunction);
-app.get('/books/:id', singleBookFunction);
 app.post('/books', addBookFunction);
+app.get('/books/:id', singleBookFunction);
+app.post('/books/:id', readBookData);
+app.put('/books/:id', updateBookForm);
+// app.delete('/books/:id', deleteBook);
 app.get('/', bookShelfFunction);
 app.use('*', errorFunction);
 
 // Handlers
+
+// app.post('/books/update' , readBookData);
+function readBookData(request, response) {
+  const select = 'SELECT * FROM books WHERE id=$1;';
+  const bookId = [request.params.id];
+  client.query(select, bookId).then(bookData => {
+    const responseObject = { books: bookData.rows };
+    response.render('pages/books/edit.ejs', responseObject);
+  });
+}
+
+// app.put('/books/update/:id', updateBookForm);
+function updateBookForm(request, response) {
+  const bookId = [request.body.id];
+  console.log(request.body);
+  response.json(request.body);
+  // console.log('id ' + bookId + '\ndata from request ' + request.body);
+  // const update = 'UPDATE  books SET author=$1 AND title=$2 AND isbn=$3 AND image_url=$4 AND description=$5 WHERE id=$6;';
+  // const updatedData = [];
+
+  // client.query(update, updatedData).then(() => {
+  //   response.redirect(`/books/${bookId}`);
+  // });
+}
+
+// app.delete('/books/delete/:id', deleteBook);
+// function deleteBook(request, response) {
+//   const bookId = [request.body.id];
+//   const deleteSql = 'DELETE FROM tasks WHERE id=$1';
+
+//   client.query(deleteSql, bookId).then(() => {
+//     response.redirect(`/`);
+//   });
+// }
+
 function bookShelfFunction(request, response) {
   const selectAll = 'SELECT * FROM books;';
   client.query(selectAll).then(bookData => {

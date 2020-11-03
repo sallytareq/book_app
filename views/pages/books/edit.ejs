@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <%- include('../../layout/css.ejs') %>
+    <title>Update</title>
+</head>
+
+<body>
+    <header>
+        <%- include('../../layout/menu.ejs') %>
+    </header>
+
+    <main>
+
+        <h1>Update Book Details</h1>
+        <% books.forEach((book) => { %>
+        <article class='update-form'>
+            <form action="/books/<%= book.id %>?_method=PUT" method="POST">
+                <!-- <input type="hidden" name="_method" value="PUT"> -->
+                <input name="title" type="text" placeholder="title" value="<%= book.title %>">
+                <input name="author" type="text" placeholder="author" value="<%= book.author %>">
+                <input name="isbn" type="text" placeholder="isbn" value="<%= book.isbn %>">
+                <input name="image_url" type="text" placeholder="image_url" value="<%= book.image_url %>">
+                <textarea name="description"><%= book.description %></textarea>
+                <input name="bookshelf" type="text" placeholder="bookshelf" value="<%= book.bookshelf %>">
+                <input id='update' type="submit" value="Update Book">
+            </form>
+        </article>
+
+        <% }); %>
+
+    </main>
+
+</body>
+
+</html>
