@@ -1,3 +1,4 @@
+-- Steps taken:
 -- psql 
 -- CREATE DATABASE books_app;
 -- exit psql 
