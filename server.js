@@ -35,7 +35,7 @@ function Book(bookData) {
   this.author = bookData.authors || 'Author not mentioned';
   this.description = bookData.description || 'No description found.';
   this.isbn = `${bookData.industryIdentifiers[0].type} ${bookData.industryIdentifiers[0].identifier}` || 'ISBN not available';
-  this.bookshelf = `${bookData.categories}` || 'Book to read';
+  this.bookshelf = `Favorites`;
 }
 
 // Listen
@@ -88,9 +88,9 @@ function resultsFunction(request, response) {
 function addBookFunction(request, response) {
   // console.log(request.body);
   let newBook = request.body.bookData.split('+++');
-  const search = 'SELECT * FROM books WHERE author=$1 AND title=$2 AND isbn=$3 AND image_url=$4 AND description=$5;';
+  const search = 'SELECT * FROM books WHERE author=$1 AND title=$2 AND bookshelf=$3 AND isbn=$4 AND image_url=$5 AND description=$6;';
   const select = 'SELECT * FROM books;';
-  const insert = 'INSERT INTO books (author, title, isbn, image_url, description) VALUES($1,$2,$3,$4,$5);';
+  const insert = 'INSERT INTO books (author, title, bookshelf, isbn, image_url, description) VALUES($1,$2,$3,$4,$5,$6);';
 
   client.query(search, newBook).then(bookData => {
     let bookId = bookData.rows[0].id.toString();
@@ -124,8 +124,8 @@ function readBookData(request, response) {
 }
 function updateBookForm(request, response) {
   const bookId = request.params.id.toString();
-  const update = 'UPDATE books SET (author, title, isbn, image_url, description)=($1,$2,$3,$4,$5) WHERE id=$6;';
-  const updatedData = [request.body.author, request.body.title, request.body.isbn , request.body.image_url , request.body.description , bookId];
+  const update = 'UPDATE books SET (author, title, bookshelf, isbn, image_url, description)=($1,$2,$3,$4,$5,$6) WHERE id=$7;';
+  const updatedData = [request.body.author, request.body.title, request.body.bookshelf, request.body.isbn , request.body.image_url , request.body.description , bookId];
 
   client.query(update, updatedData).then(() => {
     response.redirect(`/books/${bookId}`);

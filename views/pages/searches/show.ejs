@@ -22,7 +22,7 @@
         <h3><%= book.title %></h3>
         <h4><%= book.author %></h4>
         <form action="/books" method="POST">
-          <button class='button' name='bookData' value="<%= book.author %>+++<%= book.title %>+++<%= book.isbn %>+++<%= book.image_url %>+++<%= book.description %>">
+          <button class='button' name='bookData' value="<%= book.author %>+++<%= book.title %>+++<%= book.bookshelf %>+++<%= book.isbn %>+++<%= book.image_url %>+++<%= book.description %>">
             Add to Bookshelf
           </button>
         </form>
